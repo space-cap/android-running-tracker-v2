@@ -41,6 +41,13 @@ API 키를 소스코드에 노출하지 않기 위해 `local.properties`를 활�
 - **운동 중**: 빨간색 "STOP RUN" 버튼, 지도 위에 실시간 경로 및 정보 표시 (기능 연동 예정)
 
 ## 다음 단계
-- `RunningService`에 실제 위치 추적 로직(LocationCallback) 구현 (Task 4)
-- Room Database (`RunRecord`) 설계 및 저장 로직 구현 (Task 5)
-- UI와 서비스 간 데이터 연동 (Task 3, 4)
+- Room Database (`RunRecord`) 설계 및 저장 로직 구현 (Task 6)
+- UI와 서비스 간 데이터 연동 (위치 데이터 실시간 표시) (Task 6)
+- 러닝 기록 저장 및 목록 보기 구현
+
+## 5. RunningService 위치 추적 구현
+백그라운드에서도 위치를 추적할 수 있는 `RunningService`를 구현했습니다.
+- **포그라운드 서비스 및 알림**: 앱이 백그라운드에 있어도 시스템에 의해 종료되지 않도록 포그라운드 서비스로 실행하며, 상단 알림을 표시합니다.
+- **FusedLocationProviderClient**: Google Play Services의 위치 API를 사용하여 배터리 효율적이고 정확한 위치 정보를 수신합니다.
+- **서비스 제어**: `HomeScreen`의 시작/정지 버튼과 연동하여 서비스를 제어합니다.
+- **권한 처리**: 위치 권한뿐만 아니라 Android 13 이상의 알림 권한(`POST_NOTIFICATIONS`) 요청 로직을 추가했습니다.

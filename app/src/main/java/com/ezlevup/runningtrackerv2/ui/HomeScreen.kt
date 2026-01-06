@@ -1,6 +1,7 @@
 package com.ezlevup.runningtrackerv2.ui
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,13 +70,17 @@ fun HomeScreen() {
             }
 
     LaunchedEffect(Unit) {
+        val permissions =
+                mutableListOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
         if (!hasLocationPermission) {
-            permissionLauncher.launch(
-                    arrayOf(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-            )
+            permissionLauncher.launch(permissions.toTypedArray())
         }
     }
 
@@ -127,7 +132,15 @@ fun HomeScreen() {
         // Bottom Controls
         Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)) {
             Button(
-                    onClick = { isTracking = !isTracking },
+                    onClick = {
+                        isTracking = !isTracking
+                        Intent(context, RunningService::class.java).also { intent ->
+                            intent.action =
+                                    if (isTracking) RunningService.ACTION_START
+                                    else RunningService.ACTION_STOP
+                            context.startService(intent)
+                        }
+                    },
                     colors =
                             ButtonDefaults.buttonColors(
                                     containerColor = if (isTracking) Color.Red else Color.Green
