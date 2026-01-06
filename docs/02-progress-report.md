@@ -45,6 +45,14 @@ API 키를 소스코드에 노출하지 않기 위해 `local.properties`를 활�
 - UI와 서비스 간 데이터 연동 (위치 데이터 실시간 표시) (Task 6)
 - 러닝 기록 저장 및 목록 보기 구현
 
+## 6. Room Database 구현
+러닝 기록 저장을 위한 로컬 데이터베이스를 구축했습니다.
+- **RunRecord**: 러닝 데이터를 저장하는 Entity. Bitmap 이미지 저장 지원.
+- **RunDao**: 데이터 삽입, 삭제 및 다양한 정렬 기준(날짜, 거리, 시간 등) 조회 쿼리 제공.
+- **RunningDatabase**: RoomDatabase 추상 클래스 및 TypeConverter 연결.
+- **Converters**: Bitmap <-> ByteArray 변환 로직 구현.
+- **Testing**: `RunDaoTest`를 통한 기본 CRUD 기능 검증 (진행 중).
+
 ## 5. RunningService 위치 추적 구현
 백그라운드에서도 위치를 추적할 수 있는 `RunningService`를 구현했습니다.
 - **포그라운드 서비스 및 알림**: 앱이 백그라운드에 있어도 시스템에 의해 종료되지 않도록 포그라운드 서비스로 실행하며, 상단 알림을 표시합니다.
