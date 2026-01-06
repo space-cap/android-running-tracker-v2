@@ -7,7 +7,7 @@
 
 ### Data 레이어 (New)
 
-#### [NEW] [RunRecord.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/data/RunRecord.kt)
+#### [NEW] [RunRecord.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/data/RunRecord.kt)
 - `@Entity(tableName = "run_table")`
 - 필드:
     - `id`: Primary Key (Auto Generate)
@@ -18,16 +18,16 @@
     - `timeInMillis`: Long (운동 소요 시간)
     - `caloriesBurned`: Int
 
-#### [NEW] [RunDao.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/data/RunDao.kt)
+#### [NEW] [RunDao.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/data/RunDao.kt)
 - `insertRun(run: RunRecord)`
 - `deleteRun(run: RunRecord)`
 - `getAllRunsSortedByDate()`: Flow<List<RunRecord>>
 - 그 외 정렬 기준별 쿼리 (거리순, 시간순 등)
 
-#### [NEW] [Converters.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/data/Converters.kt)
+#### [NEW] [Converters.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/data/Converters.kt)
 - `Bitmap` <-> `ByteArray` 변환 메서드 구현
 
-#### [NEW] [RunningDatabase.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/data/RunningDatabase.kt)
+#### [NEW] [RunningDatabase.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/data/RunningDatabase.kt)
 - `@Database` 어노테이션 정의
 - 싱글톤 패턴으로 DB 인스턴스 제공
 

@@ -11,7 +11,7 @@
 
 ### Service 레이어
 
-#### [수정] [RunningService.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/RunningService.kt)
+#### [수정] [RunningService.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/RunningService.kt)
 - `FusedLocationProviderClient` 초기화.
 - `NotificationChannel` 생성 및 포그라운드 서비스 시작 (`startForeground`).
 - `LocationCallback`을 구현하여 위치 업데이트 수신.
@@ -20,7 +20,7 @@
 
 ### UI 레이어
 
-#### [수정] [HomeScreen.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/ui/HomeScreen.kt)
+#### [수정] [HomeScreen.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/ui/HomeScreen.kt)
 - 시작/정지 버튼 클릭 시 `RunningService`에 인텐트 전송 (`startService`, `stopService`).
 - 알림 권한 요청 로직 추가 (필요 시).
 
