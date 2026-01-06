@@ -18,6 +18,7 @@ API 키를 소스코드에 노출하지 않기 위해 `local.properties`를 활�
 - **Room**: 로컬 데이터베이스 저장 (v2.6.1)
 - **Maps Compose**: Jetpack Compose용 Google Maps (v4.4.1)
 - **Play Services Location**: 위치 추적 서비스 (v21.0.1)
+- **Material Icons Extended**: 추가적인 Material Icon 사용 (`Icons.Default.Stop` 등)
 - **KSP**: Room 컴파일러용 플러그인 (v2.0.21-1.0.27)
 
 ## 3. 앱 권한 및 서비스 구성
