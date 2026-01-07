@@ -9,4 +9,22 @@ import androidx.room.TypeConverters
 abstract class RunningDatabase : RoomDatabase() {
 
     abstract fun getRunDao(): RunDao
+
+    companion object {
+        @Volatile private var instance: RunningDatabase? = null
+
+        fun getInstance(context: android.content.Context): RunningDatabase {
+            return instance
+                    ?: synchronized(this) {
+                        instance
+                                ?: androidx.room.Room.databaseBuilder(
+                                                context.applicationContext,
+                                                RunningDatabase::class.java,
+                                                "running_db"
+                                        )
+                                        .build()
+                                        .also { instance = it }
+                    }
+        }
+    }
 }

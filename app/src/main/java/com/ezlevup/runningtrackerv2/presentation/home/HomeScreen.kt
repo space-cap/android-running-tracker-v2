@@ -48,9 +48,20 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+        viewModel: HomeViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel(
+                        factory =
+                                HomeViewModelFactory(
+                                        (LocalContext.current.applicationContext as
+                                                        com.ezlevup.runningtrackerv2.BaseApplication)
+                                                .database.getRunDao()
+                                )
+                )
+) {
         val context = LocalContext.current
         var hasLocationPermission by remember {
                 mutableStateOf(
@@ -118,15 +129,16 @@ fun HomeScreen() {
                 }
         }
 
-        // var isTracking by remember { mutableStateOf(false) } // Removed local state
-
         Box(modifier = Modifier.fillMaxSize()) {
                 // Full screen Google Map
                 GoogleMap(
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState,
                         properties = MapProperties(isMyLocationEnabled = hasLocationPermission),
-                        uiSettings = MapUiSettings(zoomControlsEnabled = false)
+                        uiSettings = MapUiSettings(zoomControlsEnabled = false),
+                        onMapLoaded = {
+                                // Future use for snapshot if needed immediately
+                        }
                 ) {
                         if (TrackingManager.pathPoints.isNotEmpty()) {
                                 Polyline(
@@ -175,12 +187,36 @@ fun HomeScreen() {
                 Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)) {
                         Button(
                                 onClick = {
-                                        Intent(context, RunningService::class.java).also { intent ->
-                                                intent.action =
-                                                        if (TrackingManager.isTracking)
-                                                                RunningService.ACTION_STOP
-                                                        else RunningService.ACTION_START
-                                                context.startService(intent)
+                                        if (TrackingManager.isTracking) {
+                                                // Action Stop: Capture snapshot and save
+                                                // Note: In a real app we might want to show a
+                                                // dialog first
+                                                // cameraPositionState.position has the current
+                                                // view, we can use it for snapshot
+                                                // However, GoogleMap component doesn't expose
+                                                // snapshot() directly in a simple way
+                                                // standard way is to use a MapView or wait for a
+                                                // stable way in Compose.
+                                                // For now we will just save without bitmap or use a
+                                                // dummy if snapshot is complex.
+                                                // Actually, maps-compose v4+ supports it better but
+                                                // let's stick to saving data first.
+
+                                                Intent(context, RunningService::class.java).also {
+                                                        intent ->
+                                                        intent.action = RunningService.ACTION_STOP
+                                                        context.startService(intent)
+                                                }
+                                                viewModel.saveRun(
+                                                        null
+                                                ) // Save without bitmap for now
+                                        } else {
+                                                // Action Start
+                                                Intent(context, RunningService::class.java).also {
+                                                        intent ->
+                                                        intent.action = RunningService.ACTION_START
+                                                        context.startService(intent)
+                                                }
                                         }
                                 },
                                 colors =
