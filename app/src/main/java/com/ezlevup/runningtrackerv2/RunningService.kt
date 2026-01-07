@@ -77,6 +77,7 @@ class RunningService : Service() {
 
         startForeground(1, notification)
         startLocationUpdates()
+        TrackingManager.startResumeTimer()
     }
 
     private fun startLocationUpdates() {
@@ -99,6 +100,7 @@ class RunningService : Service() {
     private fun stop() {
         stopForeground(STOP_FOREGROUND_REMOVE)
         locationClient.removeLocationUpdates(locationCallback)
+        TrackingManager.stopTimer()
         stopSelf()
     }
 

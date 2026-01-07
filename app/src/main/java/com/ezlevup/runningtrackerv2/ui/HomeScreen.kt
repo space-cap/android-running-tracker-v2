@@ -110,7 +110,7 @@ fun HomeScreen() {
         }
     }
 
-    var isTracking by remember { mutableStateOf(false) }
+    // var isTracking by remember { mutableStateOf(false) } // Removed local state
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Full screen Google Map
@@ -135,7 +135,7 @@ fun HomeScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                    text = "00:00:00",
+                    text = FormatUtils.getFormattedStopWatchTime(TrackingManager.durationInMillis),
                     color = Color.White,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold
@@ -154,30 +154,32 @@ fun HomeScreen() {
         Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)) {
             Button(
                     onClick = {
-                        isTracking = !isTracking
                         Intent(context, RunningService::class.java).also { intent ->
                             intent.action =
-                                    if (isTracking) RunningService.ACTION_START
-                                    else RunningService.ACTION_STOP
+                                    if (TrackingManager.isTracking) RunningService.ACTION_STOP
+                                    else RunningService.ACTION_START
                             context.startService(intent)
                         }
                     },
                     colors =
                             ButtonDefaults.buttonColors(
-                                    containerColor = if (isTracking) Color.Red else Color.Green
+                                    containerColor =
+                                            if (TrackingManager.isTracking) Color.Red
+                                            else Color.Green
                             ),
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.height(80.dp).fillMaxWidth(0.8f) // 80% width
             ) {
                 Icon(
                         imageVector =
-                                if (isTracking) Icons.Default.Stop else Icons.Default.PlayArrow,
-                        contentDescription = if (isTracking) "Stop" else "Start",
+                                if (TrackingManager.isTracking) Icons.Default.Stop
+                                else Icons.Default.PlayArrow,
+                        contentDescription = if (TrackingManager.isTracking) "Stop" else "Start",
                         tint = Color.White
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 Text(
-                        text = if (isTracking) "STOP RUN" else "START RUN",
+                        text = if (TrackingManager.isTracking) "STOP RUN" else "START RUN",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
