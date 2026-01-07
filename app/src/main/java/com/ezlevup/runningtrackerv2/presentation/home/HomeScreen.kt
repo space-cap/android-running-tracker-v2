@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ezlevup.runningtrackerv2.service.RunningService
 import com.ezlevup.runningtrackerv2.util.FormatUtils
 import com.ezlevup.runningtrackerv2.util.TrackingManager
@@ -48,10 +49,10 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun HomeScreen(
+        onNavigateToRunList: () -> Unit = {},
         viewModel: HomeViewModel =
                 androidx.lifecycle.viewmodel.compose.viewModel(
                         factory =
@@ -148,6 +149,18 @@ fun HomeScreen(
                                 )
                         }
                 }
+
+                // Top-right History Button
+                Button(
+                        onClick = onNavigateToRunList,
+                        modifier =
+                                Modifier.align(Alignment.TopEnd).padding(top = 48.dp, end = 16.dp),
+                        colors =
+                                ButtonDefaults.buttonColors(
+                                        containerColor = Color.Black.copy(alpha = 0.6f)
+                                ),
+                        shape = RoundedCornerShape(12.dp)
+                ) { Text(text = "기록", color = Color.White) }
 
                 // Overlay for stats
                 Column(

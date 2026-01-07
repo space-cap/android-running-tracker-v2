@@ -14,6 +14,7 @@ playServicesLocation = "21.0.1"
 ksp = "2.0.21-1.0.27"
 truth = "1.4.2"
 coroutines = "1.7.3"
+navigationCompose = "2.8.5"
 lifecycle = "2.10.0"
 
 [libraries]
@@ -41,6 +42,7 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
