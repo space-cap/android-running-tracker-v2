@@ -58,6 +58,10 @@ com.ezlevup.runningtrackerv2
     *   Android Studio에서 프로젝트를 엽니다.
     *   `Run` 버튼을 눌러 에뮬레이터 또는 실기기에서 실행합니다.
 
+실행화면
+![Screenshot_2026-01-06-20-28-47-738_com ezlevup runningtrackerv2](https://github.com/user-attachments/assets/28aa3635-3745-4d02-a38c-fed22b4669b1)
+
+
 ## 📚 문서 (Documentation)
 
 자세한 개발 기록과 계획은 `docs/` 폴더에서 확인하실 수 있습니다.
