@@ -67,13 +67,29 @@ class RunningService : Service() {
             notificationManager.createNotificationChannel(channel)
         }
 
+        val intent =
+                Intent(this, com.ezlevup.runningtrackerv2.MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+        val pendingIntent =
+                android.app.PendingIntent.getActivity(
+                        this,
+                        0,
+                        intent,
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            android.app.PendingIntent.FLAG_IMMUTABLE or
+                                    android.app.PendingIntent.FLAG_UPDATE_CURRENT
+                        } else {
+                            android.app.PendingIntent.FLAG_UPDATE_CURRENT
+                        }
+                )
+
         val notification =
                 NotificationCompat.Builder(this, CHANNEL_ID)
                         .setContentTitle("Running Tracker")
                         .setContentText("Tracking your run...")
-                        .setSmallIcon(
-                                R.drawable.ic_launcher_foreground
-                        ) // Ensure this icon exists or use a default
+                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setContentIntent(pendingIntent)
                         .setOngoing(true)
                         .build()
 
