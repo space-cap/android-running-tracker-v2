@@ -15,7 +15,7 @@
         - 새로운 위치를 리스트에 추가합니다.
         - 이전 위치가 있다면 `distanceTo()`를 사용하여 거리를 계산하고 `distanceInMeters`에 누적합니다.
 
-### 2. [수정] [`RunningService.kt`](../app/src/main/java/com/ezlevup/runningtrackerv2/RunningService.kt)
+### 2. [수정] [`service/RunningService.kt`](../app/src/main/java/com/ezlevup/runningtrackerv2/service/RunningService.kt)
 - `onLocationResult` 콜백 내에서:
     - 위치 업데이트가 발생할 때마다 `TrackingManager.addPathPoint(location)`를 호출하여 데이터를 전달합니다.
 

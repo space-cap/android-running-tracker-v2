@@ -37,7 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.ezlevup.runningtrackerv2.RunningService
+import com.ezlevup.runningtrackerv2.service.RunningService
 import com.ezlevup.runningtrackerv2.util.FormatUtils
 import com.ezlevup.runningtrackerv2.util.TrackingManager
 import com.google.android.gms.location.LocationServices

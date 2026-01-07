@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".RunningService"
+            android:name=".service.RunningService"
             android:foregroundServiceType="location"
             android:exported="false" />
         <meta-data

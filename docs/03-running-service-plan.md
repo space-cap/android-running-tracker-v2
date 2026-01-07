@@ -11,7 +11,7 @@
 
 ### Service 레이어
 
-#### [수정] [RunningService.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/RunningService.kt)
+#### [수정] [RunningService.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/service/RunningService.kt)
 - `FusedLocationProviderClient` 초기화.
 - `NotificationChannel` 생성 및 포그라운드 서비스 시작 (`startForeground`).
 - `LocationCallback`을 구현하여 위치 업데이트 수신.

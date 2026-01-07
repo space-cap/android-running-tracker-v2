@@ -3,11 +3,11 @@
 `RunningService`를 통해 백그라운드 위치 추적 및 알림 기능을 구현했습니다.
 
 ## 변경 사항
-- **[수정] `RunningService.kt`**
+- **[수정] [RunningService.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/service/RunningService.kt)**
     - `FusedLocationProviderClient`를 사용한 위치 추적 로직 추가.
     - 포그라운드 서비스 및 알림 채널 구현.
     - 서비스 시작/정지 (`ACTION_START`, `ACTION_STOP`) 처리.
-- **[수정] `HomeScreen.kt`**
+- **[수정] [HomeScreen.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeScreen.kt)**
     - 시작 버튼 클릭 시 `RunningService` 시작 (`ACTION_START`).
     - 정지 버튼 클릭 시 `RunningService` 정지 (`ACTION_STOP`).
     - Android 13+ 대응 알림 권한(`POST_NOTIFICATIONS`) 요청 로직 추가.

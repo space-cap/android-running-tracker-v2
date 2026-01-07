@@ -30,8 +30,8 @@ com.ezlevup.runningtrackerv2
 ├── data            # Room DB, Entity, DAO
 ├── presentation    # UI Screens (Home, etc.)
 │   └── home        # Home Screen components
+├── service         # 백그라운드 서비스 (위치 추적 등)
 ├── util            # Utils (TrackingManager, FormatUtils)
-├── RunningService  # 백그라운드 위치 추적 서비스
 └── MainActivity    # 진입점
 ```
 

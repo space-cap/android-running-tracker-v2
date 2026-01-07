@@ -1,4 +1,4 @@
-package com.ezlevup.runningtrackerv2
+package com.ezlevup.runningtrackerv2.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
+import com.ezlevup.runningtrackerv2.R
 import com.ezlevup.runningtrackerv2.util.TrackingManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback

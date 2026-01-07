@@ -5,7 +5,7 @@ UI의 시간이 작동하지 않는 문제를 해결하기 위해 **TrackingMana
 ## 변경 사항
 - **[NEW] [TrackingManager.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/util/TrackingManager.kt)**: 러닝 시간(Stopwatch)과 상태(`isTracking`)를 관리하는 싱글톤 객체.
 - **[NEW] [FormatUtils.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/util/FormatUtils.kt)**: 밀리초 단위를 `HH:MM:SS` 형식으로 변환하는 유틸리티.
-- **[수정] [RunningService.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/RunningService.kt)**: 서비스 시작/종료 시 `TrackingManager`의 타이머를 `startResumeTimer()` / `stopTimer()`로 제어하도록 수정.
+- **[수정] [RunningService.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/service/RunningService.kt)**: 서비스 시작/종료 시 `TrackingManager`의 타이머를 `startResumeTimer()` / `stopTimer()`로 제어하도록 수정.
 - **[수정] [HomeScreen.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeScreen.kt)**:
     - 로컬 상태(`isTracking`) 제거 -> `TrackingManager.isTracking` 관찰.
     - 하드코딩된 시간 제거 -> `TrackingManager.durationInMillis`를 관찰하여 실시간 표시.
