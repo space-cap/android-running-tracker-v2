@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.ezlevup.runningtrackerv2.RunningService
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -88,6 +89,25 @@ fun HomeScreen() {
     val seoul = LatLng(37.5665, 126.9780)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(seoul, 15f)
+    }
+
+    LaunchedEffect(hasLocationPermission) {
+        if (hasLocationPermission) {
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+            try {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    if (location != null) {
+                        cameraPositionState.position =
+                                CameraPosition.fromLatLngZoom(
+                                        LatLng(location.latitude, location.longitude),
+                                        15f
+                                )
+                    }
+                }
+            } catch (e: SecurityException) {
+                // Permission might be revoked
+            }
+        }
     }
 
     var isTracking by remember { mutableStateOf(false) }
