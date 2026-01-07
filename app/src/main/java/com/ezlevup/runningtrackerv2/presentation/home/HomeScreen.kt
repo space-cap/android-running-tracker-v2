@@ -302,13 +302,8 @@ fun HomeScreen(
                                 // STOP Button
                                 Button(
                                         onClick = {
-                                                Intent(context, RunningService::class.java).also {
-                                                        intent ->
-                                                        intent.action = RunningService.ACTION_STOP
-                                                        context.startService(intent)
-                                                }
                                                 googleMap?.snapshot { bitmap ->
-                                                        viewModel.saveRun(bitmap)
+                                                        viewModel.saveRun(context, bitmap)
                                                 }
                                         },
                                         colors =

@@ -16,10 +16,24 @@ class HomeViewModel(private val runDao: RunDao) : ViewModel() {
     val pathPoints = TrackingManager.pathPoints
     val currentPace = TrackingManager.currentPace
 
-    fun saveRun(bitmap: Bitmap?) {
+    fun saveRun(context: android.content.Context, bitmap: Bitmap?) {
         val distance = TrackingManager.distanceInMeters
         val time = TrackingManager.durationInMillis
         val timestamp = System.currentTimeMillis()
+
+        android.util.Log.d("HomeViewModel", "Saving run: time=$time, distance=$distance")
+
+        // Don't save if there's no data
+        if (time <= 0L && distance <= 0) {
+            TrackingManager.stopTimer()
+            android.content.Intent(
+                            context,
+                            com.ezlevup.runningtrackerv2.service.RunningService::class.java
+                    )
+                    .also { intent -> context.stopService(intent) }
+            return
+        }
+
         val avgSpeed = if (time > 0) (distance / 1000f) / (time / 1000f / 3600f) else 0f
         val calories = (distance / 1000f * 60).toInt()
 
@@ -35,7 +49,12 @@ class HomeViewModel(private val runDao: RunDao) : ViewModel() {
 
         viewModelScope.launch { runDao.insertRun(run) }
 
-        // Stop the timer after capturing data
+        // Stop the timer and the service after capturing data
         TrackingManager.stopTimer()
+        android.content.Intent(
+                        context,
+                        com.ezlevup.runningtrackerv2.service.RunningService::class.java
+                )
+                .also { intent -> context.stopService(intent) }
     }
 }

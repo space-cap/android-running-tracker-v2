@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit
 
 object FormatUtils {
     fun getFormattedStopWatchTime(ms: Long, includeMillis: Boolean = false): String {
+        android.util.Log.d("FormatUtils", "Formatting time: ms=$ms")
         var milliseconds = ms
         val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
         milliseconds -= TimeUnit.HOURS.toMillis(hours)
