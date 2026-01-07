@@ -17,11 +17,11 @@ class HomeViewModel(private val runDao: RunDao) : ViewModel() {
     val currentPace = TrackingManager.currentPace
 
     fun saveRun(bitmap: Bitmap?) {
-        val timestamp = System.currentTimeMillis()
         val distance = TrackingManager.distanceInMeters
         val time = TrackingManager.durationInMillis
+        val timestamp = System.currentTimeMillis()
         val avgSpeed = if (time > 0) (distance / 1000f) / (time / 1000f / 3600f) else 0f
-        val calories = (distance / 1000f * 60).toInt() // Dummy calories formula
+        val calories = (distance / 1000f * 60).toInt()
 
         val run =
                 RunRecord(
@@ -33,9 +33,9 @@ class HomeViewModel(private val runDao: RunDao) : ViewModel() {
                         caloriesBurned = calories
                 )
 
-        viewModelScope.launch {
-            runDao.insertRun(run)
-            TrackingManager.stopTimer()
-        }
+        viewModelScope.launch { runDao.insertRun(run) }
+
+        // Stop the timer after capturing data
+        TrackingManager.stopTimer()
     }
 }
