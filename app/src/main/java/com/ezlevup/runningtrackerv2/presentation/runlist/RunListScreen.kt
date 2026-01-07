@@ -2,6 +2,7 @@ package com.ezlevup.runningtrackerv2.presentation.runlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,42 +41,39 @@ import java.util.Locale
 
 @Composable
 fun RunListScreen(
-    viewModel: RunListViewModel =
-        androidx.lifecycle.viewmodel.compose.viewModel(
-            factory =
-                RunListViewModelFactory(
-                    (LocalContext.current.applicationContext as BaseApplication)
-                        .database.getRunDao()
+        onRunClick: (Int) -> Unit = {},
+        viewModel: RunListViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel(
+                        factory =
+                                RunListViewModelFactory(
+                                        (LocalContext.current.applicationContext as BaseApplication)
+                                                .database.getRunDao()
+                                )
                 )
-        )
 ) {
     val runs by viewModel.runs.collectAsState()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.primary)
-                        .padding(16.dp)
-            ) {
-                Text(
-                    text = "나의 러닝 기록",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                Column(
+                        modifier =
+                                Modifier.fillMaxWidth()
+                                        .background(MaterialTheme.colorScheme.primary)
+                                        .padding(16.dp)
+                ) {
+                    Text(
+                            text = "나의 러닝 기록",
+                            color = Color.White,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                    )
+                }
             }
-        }
     ) { padding ->
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)
-            .padding(16.dp)) {
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             items(runs) { run ->
-                RunItem(run)
+                RunItem(run = run, onClick = { run.id?.let { onRunClick(it) } })
                 Spacer(modifier = Modifier.padding(8.dp))
             }
         }
@@ -83,70 +81,51 @@ fun RunListScreen(
 }
 
 @Composable
-fun RunItem(run: RunRecord) {
+fun RunItem(run: RunRecord, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
+            modifier = Modifier.fillMaxWidth().clickable { onClick() },
+            shape = RoundedCornerShape(12.dp),
+            colors =
+                    CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             // run.img를 로컬 변수에 할당하여 스마트 캐스트 오류 해결
             val imageBitmap = run.img
             // Display snapshot image or placeholder
             if (imageBitmap != null) {
                 Image(
-                    bitmap = imageBitmap.asImageBitmap(),
-                    contentDescription = "Run Snapshot",
-                    modifier =
-                        Modifier
-                            .size(80.dp)
-                            .background(
-                                Color.Gray,
-                                RoundedCornerShape(8.dp)
-                            ),
-                    contentScale = ContentScale.Crop
+                        bitmap = imageBitmap.asImageBitmap(),
+                        contentDescription = "Run Snapshot",
+                        modifier =
+                                Modifier.size(80.dp)
+                                        .background(Color.Gray, RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
                 )
             } else {
                 Box(
-                    modifier =
-                        Modifier
-                            .size(80.dp)
-                            .background(
-                                Color.Gray,
-                                RoundedCornerShape(8.dp)
-                            ),
-                    contentAlignment = Alignment.Center
+                        modifier =
+                                Modifier.size(80.dp)
+                                        .background(Color.Gray, RoundedCornerShape(8.dp)),
+                        contentAlignment = Alignment.Center
                 ) { Text(text = "Map", color = Color.White, fontSize = 12.sp) }
             }
             Spacer(modifier = Modifier.width(16.dp))
 
             Column {
-                val dateFormat =
-                    SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
                 val dateStr = dateFormat.format(Date(run.timestamp))
 
                 Text(text = dateStr, fontSize = 14.sp, color = Color.Gray)
                 Text(
-                    text =
-                        String.format(
-                            "%.2f km",
-                            run.distanceInMeters / 1000f
-                        ),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                        text = String.format("%.2f km", run.distanceInMeters / 1000f),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text =
-                        FormatUtils.getFormattedStopWatchTime(
-                            run.timeInMillis
-                        ),
-                    fontSize = 16.sp
+                        text = FormatUtils.getFormattedStopWatchTime(run.timeInMillis),
+                        fontSize = 16.sp
                 )
             }
         }

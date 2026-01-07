@@ -8,6 +8,8 @@ interface RunDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertRun(run: RunRecord)
 
+    @Query("SELECT * FROM run_table WHERE id = :runId") fun getRunById(runId: Int): Flow<RunRecord?>
+
     @Delete suspend fun deleteRun(run: RunRecord)
 
     @Query("SELECT * FROM run_table ORDER BY timestamp DESC")
