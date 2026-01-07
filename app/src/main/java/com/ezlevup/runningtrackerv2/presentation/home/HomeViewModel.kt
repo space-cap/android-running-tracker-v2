@@ -21,8 +21,6 @@ class HomeViewModel(private val runDao: RunDao) : ViewModel() {
         val time = TrackingManager.durationInMillis
         val timestamp = System.currentTimeMillis()
 
-        android.util.Log.d("HomeViewModel", "Saving run: time=$time, distance=$distance")
-
         // Don't save if there's no data
         if (time <= 0L && distance <= 0) {
             TrackingManager.stopTimer()
