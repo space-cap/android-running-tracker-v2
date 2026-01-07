@@ -20,7 +20,7 @@
 
 ### UI 레이어
 
-#### [수정] [HomeScreen.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/ui/HomeScreen.kt)
+#### [수정] [HomeScreen.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeScreen.kt)
 - 시작/정지 버튼 클릭 시 `RunningService`에 인텐트 전송 (`startService`, `stopService`).
 - 알림 권한 요청 로직 추가 (필요 시).
 

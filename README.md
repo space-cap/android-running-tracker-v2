@@ -28,7 +28,9 @@
 ```
 com.ezlevup.runningtrackerv2
 ├── data            # Room DB, Entity, DAO
-├── ui              # Compose UI Screens
+├── presentation    # UI Screens (Home, etc.)
+│   └── home        # Home Screen components
+├── util            # Utils (TrackingManager, FormatUtils)
 ├── RunningService  # 백그라운드 위치 추적 서비스
 └── MainActivity    # 진입점
 ```

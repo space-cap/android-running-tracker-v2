@@ -19,7 +19,7 @@
 - `onLocationResult` 콜백 내에서:
     - 위치 업데이트가 발생할 때마다 `TrackingManager.addPathPoint(location)`를 호출하여 데이터를 전달합니다.
 
-### 3. [수정] [`ui/HomeScreen.kt`](../app/src/main/java/com/ezlevup/runningtrackerv2/ui/HomeScreen.kt)
+### 3. [수정] [`presentation/home/HomeScreen.kt`](../app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeScreen.kt)
 - **거리 표시**: `TrackingManager.distanceInMeters`를 구독하여 `km` 단위(소수점 2자리)로 변환해 표시합니다.
 - **페이스 계산**:
     - 공식: `(경과 시간(분)) / (이동 거리(km))`

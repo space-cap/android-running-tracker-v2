@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.ezlevup.runningtrackerv2.ui.HomeScreen
+import com.ezlevup.runningtrackerv2.presentation.home.HomeScreen
 import com.ezlevup.runningtrackerv2.ui.theme.RunningTrackerV2Theme
 
 class MainActivity : ComponentActivity() {
@@ -32,7 +31,5 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun GreetingPreview() {
-    RunningTrackerV2Theme {
-        HomeScreen()
-    }
+    RunningTrackerV2Theme { HomeScreen() }
 }
