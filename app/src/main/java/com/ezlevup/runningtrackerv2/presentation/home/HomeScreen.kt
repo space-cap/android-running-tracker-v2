@@ -165,20 +165,9 @@ fun HomeScreen() {
                                 horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                                 val km = TrackingManager.distanceInMeters / 1000f
-                                val pace =
-                                        if (km > 0) {
-                                                val minutes =
-                                                        (TrackingManager.durationInMillis /
-                                                                1000f /
-                                                                60f)
-                                                val paceVal = minutes / km
-                                                val pMin = paceVal.toInt()
-                                                val pSec = ((paceVal - pMin) * 60).toInt()
-                                                String.format("%d:%02d", pMin, pSec)
-                                        } else "0:00"
 
                                 StatItem(value = String.format("%.2f", km), unit = "km")
-                                StatItem(value = pace, unit = "min/km")
+                                StatItem(value = TrackingManager.currentPace, unit = "min/km")
                         }
                 }
 
