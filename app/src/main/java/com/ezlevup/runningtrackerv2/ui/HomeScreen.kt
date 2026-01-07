@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.ezlevup.runningtrackerv2.RunningService
+import com.ezlevup.runningtrackerv2.util.FormatUtils
+import com.ezlevup.runningtrackerv2.util.TrackingManager
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
