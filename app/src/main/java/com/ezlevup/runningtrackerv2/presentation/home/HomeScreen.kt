@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Button
@@ -25,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -132,6 +134,21 @@ fun HomeScreen(
                 }
         }
 
+        // Observe the last path point to trigger camera animation
+        val lastLatLng by remember { derivedStateOf { TrackingManager.pathPoints.lastOrNull() } }
+
+        LaunchedEffect(lastLatLng) {
+                if (TrackingManager.isTracking && lastLatLng != null) {
+                        cameraPositionState.animate(
+                                update =
+                                        com.google.android.gms.maps.CameraUpdateFactory.newLatLng(
+                                                lastLatLng!!
+                                        ),
+                                durationMs = 1000
+                        )
+                }
+        }
+
         Box(modifier = Modifier.fillMaxSize()) {
                 // Full screen Google Map
                 GoogleMap(
@@ -201,54 +218,119 @@ fun HomeScreen(
                 }
 
                 // Bottom Controls
-                Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)) {
-                        Button(
-                                onClick = {
-                                        if (TrackingManager.isTracking) {
-                                                Intent(context, RunningService::class.java).also {
-                                                        intent ->
-                                                        intent.action = RunningService.ACTION_STOP
-                                                        context.startService(intent)
-                                                }
+                Row(
+                        modifier =
+                                Modifier.align(Alignment.BottomCenter)
+                                        .padding(bottom = 32.dp, start = 16.dp, end = 16.dp)
+                                        .fillMaxWidth(),
+                        horizontalArrangement =
+                                Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+                ) {
+                        val isStarted = TrackingManager.durationInMillis > 0L
 
-                                                googleMap?.snapshot { bitmap ->
-                                                        viewModel.saveRun(bitmap)
-                                                }
-                                        } else {
-                                                // Action Start
+                        if (!isStarted) {
+                                // START Button
+                                Button(
+                                        onClick = {
                                                 Intent(context, RunningService::class.java).also {
                                                         intent ->
                                                         intent.action = RunningService.ACTION_START
                                                         context.startService(intent)
                                                 }
-                                        }
-                                },
-                                colors =
-                                        ButtonDefaults.buttonColors(
-                                                containerColor =
-                                                        if (TrackingManager.isTracking) Color.Red
-                                                        else Color.Green
-                                        ),
-                                shape = RoundedCornerShape(50),
-                                modifier = Modifier.height(80.dp).fillMaxWidth(0.8f) // 80% width
-                        ) {
-                                Icon(
-                                        imageVector =
-                                                if (TrackingManager.isTracking) Icons.Default.Stop
+                                        },
+                                        colors =
+                                                ButtonDefaults.buttonColors(
+                                                        containerColor = Color.Green
+                                                ),
+                                        shape = RoundedCornerShape(50),
+                                        modifier = Modifier.height(80.dp).fillMaxWidth(0.8f)
+                                ) {
+                                        Icon(
+                                                Icons.Default.PlayArrow,
+                                                contentDescription = "Start",
+                                                tint = Color.White
+                                        )
+                                        Spacer(modifier = Modifier.padding(4.dp))
+                                        Text(
+                                                "START RUN",
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.White
+                                        )
+                                }
+                        } else {
+                                // PAUSE / RESUME Button
+                                Button(
+                                        onClick = {
+                                                Intent(context, RunningService::class.java).also {
+                                                        intent ->
+                                                        intent.action =
+                                                                if (TrackingManager.isTracking)
+                                                                        RunningService.ACTION_PAUSE
+                                                                else RunningService.ACTION_RESUME
+                                                        context.startService(intent)
+                                                }
+                                        },
+                                        colors =
+                                                ButtonDefaults.buttonColors(
+                                                        containerColor =
+                                                                if (TrackingManager.isTracking)
+                                                                        Color.Yellow
+                                                                else Color.Green
+                                                ),
+                                        shape = RoundedCornerShape(50),
+                                        modifier = Modifier.height(80.dp).weight(1f)
+                                ) {
+                                        Icon(
+                                                if (TrackingManager.isTracking) Icons.Default.Pause
                                                 else Icons.Default.PlayArrow,
-                                        contentDescription =
-                                                if (TrackingManager.isTracking) "Stop" else "Start",
-                                        tint = Color.White
-                                )
-                                Spacer(modifier = Modifier.padding(8.dp))
-                                Text(
-                                        text =
-                                                if (TrackingManager.isTracking) "STOP RUN"
-                                                else "START RUN",
-                                        fontSize = 24.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White
-                                )
+                                                contentDescription =
+                                                        if (TrackingManager.isTracking) "Pause"
+                                                        else "Resume",
+                                                tint = Color.Black
+                                        )
+                                        Spacer(modifier = Modifier.padding(4.dp))
+                                        Text(
+                                                if (TrackingManager.isTracking) "PAUSE"
+                                                else "RESUME",
+                                                fontSize = 18.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.Black
+                                        )
+                                }
+
+                                // STOP Button
+                                Button(
+                                        onClick = {
+                                                Intent(context, RunningService::class.java).also {
+                                                        intent ->
+                                                        intent.action = RunningService.ACTION_STOP
+                                                        context.startService(intent)
+                                                }
+                                                googleMap?.snapshot { bitmap ->
+                                                        viewModel.saveRun(bitmap)
+                                                }
+                                        },
+                                        colors =
+                                                ButtonDefaults.buttonColors(
+                                                        containerColor = Color.Red
+                                                ),
+                                        shape = RoundedCornerShape(50),
+                                        modifier = Modifier.height(80.dp).weight(1f)
+                                ) {
+                                        Icon(
+                                                Icons.Default.Stop,
+                                                contentDescription = "Stop",
+                                                tint = Color.White
+                                        )
+                                        Spacer(modifier = Modifier.padding(4.dp))
+                                        Text(
+                                                "STOP",
+                                                fontSize = 18.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.White
+                                        )
+                                }
                         }
                 }
         }
