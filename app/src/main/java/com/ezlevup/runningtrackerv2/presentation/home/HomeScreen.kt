@@ -45,6 +45,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
@@ -106,6 +107,7 @@ fun HomeScreen(
         val cameraPositionState = rememberCameraPositionState {
                 position = CameraPosition.fromLatLngZoom(seoul, 15f)
         }
+        var googleMap by remember { mutableStateOf<com.google.android.gms.maps.GoogleMap?>(null) }
 
         LaunchedEffect(hasLocationPermission) {
                 if (hasLocationPermission) {
@@ -141,6 +143,8 @@ fun HomeScreen(
                                 // Future use for snapshot if needed immediately
                         }
                 ) {
+                        MapEffect(Unit) { map -> googleMap = map }
+
                         if (TrackingManager.pathPoints.isNotEmpty()) {
                                 Polyline(
                                         points = TrackingManager.pathPoints.toList(),
@@ -201,28 +205,15 @@ fun HomeScreen(
                         Button(
                                 onClick = {
                                         if (TrackingManager.isTracking) {
-                                                // Action Stop: Capture snapshot and save
-                                                // Note: In a real app we might want to show a
-                                                // dialog first
-                                                // cameraPositionState.position has the current
-                                                // view, we can use it for snapshot
-                                                // However, GoogleMap component doesn't expose
-                                                // snapshot() directly in a simple way
-                                                // standard way is to use a MapView or wait for a
-                                                // stable way in Compose.
-                                                // For now we will just save without bitmap or use a
-                                                // dummy if snapshot is complex.
-                                                // Actually, maps-compose v4+ supports it better but
-                                                // let's stick to saving data first.
-
                                                 Intent(context, RunningService::class.java).also {
                                                         intent ->
                                                         intent.action = RunningService.ACTION_STOP
                                                         context.startService(intent)
                                                 }
-                                                viewModel.saveRun(
-                                                        null
-                                                ) // Save without bitmap for now
+
+                                                googleMap?.snapshot { bitmap ->
+                                                        viewModel.saveRun(bitmap)
+                                                }
                                         } else {
                                                 // Action Start
                                                 Intent(context, RunningService::class.java).also {
