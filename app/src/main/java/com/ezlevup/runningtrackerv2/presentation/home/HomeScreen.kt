@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
@@ -126,7 +127,15 @@ fun HomeScreen() {
                         cameraPositionState = cameraPositionState,
                         properties = MapProperties(isMyLocationEnabled = hasLocationPermission),
                         uiSettings = MapUiSettings(zoomControlsEnabled = false)
-                )
+                ) {
+                        if (TrackingManager.pathPoints.isNotEmpty()) {
+                                Polyline(
+                                        points = TrackingManager.pathPoints.toList(),
+                                        color = Color.Red,
+                                        width = 10f
+                                )
+                        }
+                }
 
                 // Overlay for stats
                 Column(
@@ -155,8 +164,21 @@ fun HomeScreen() {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                                StatItem(value = "0.00", unit = "km")
-                                StatItem(value = "0:00", unit = "min/km")
+                                val km = TrackingManager.distanceInMeters / 1000f
+                                val pace =
+                                        if (km > 0) {
+                                                val minutes =
+                                                        (TrackingManager.durationInMillis /
+                                                                1000f /
+                                                                60f)
+                                                val paceVal = minutes / km
+                                                val pMin = paceVal.toInt()
+                                                val pSec = ((paceVal - pMin) * 60).toInt()
+                                                String.format("%d:%02d", pMin, pSec)
+                                        } else "0:00"
+
+                                StatItem(value = String.format("%.2f", km), unit = "km")
+                                StatItem(value = pace, unit = "min/km")
                         }
                 }
 

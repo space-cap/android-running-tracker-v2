@@ -1,9 +1,13 @@
 package com.ezlevup.runningtrackerv2.util
 
+import android.location.Location
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,9 +23,29 @@ object TrackingManager {
     var isTracking by mutableStateOf(false)
         private set
 
+    var distanceInMeters by mutableIntStateOf(0)
+        private set
+
+    val pathPoints = mutableStateListOf<LatLng>()
+
     private var timerJob: Job? = null
     private var startTime = 0L
     private var accumulatedTime = 0L
+
+    fun addPathPoint(location: Location) {
+        val newLatLng = LatLng(location.latitude, location.longitude)
+
+        if (pathPoints.isNotEmpty()) {
+            val lastLocation =
+                    Location("last").apply {
+                        latitude = pathPoints.last().latitude
+                        longitude = pathPoints.last().longitude
+                    }
+            val distance = lastLocation.distanceTo(location)
+            distanceInMeters += distance.toInt()
+        }
+        pathPoints.add(newLatLng)
+    }
 
     fun startResumeTimer() {
         if (isTracking) return
@@ -51,6 +75,8 @@ object TrackingManager {
         isTracking = false
         timerJob?.cancel()
         durationInMillis = 0L
+        distanceInMeters = 0
+        pathPoints.clear()
         accumulatedTime = 0L
         startTime = 0L
     }

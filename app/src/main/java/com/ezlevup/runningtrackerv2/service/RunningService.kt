@@ -44,10 +44,10 @@ class RunningService : Service() {
                     override fun onLocationResult(result: LocationResult) {
                         super.onLocationResult(result)
                         result.locations.forEach { location ->
+                            TrackingManager.addPathPoint(location)
                             val lat = location.latitude
                             val lng = location.longitude
                             android.util.Log.d("RunningService", "Location: $lat, $lng")
-                            // TODO: Broadcast or store location
                         }
                     }
                 }
