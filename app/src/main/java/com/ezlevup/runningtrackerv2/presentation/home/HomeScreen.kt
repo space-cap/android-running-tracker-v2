@@ -140,64 +140,7 @@ fun HomeScreen(
         // Observe the last path point to trigger camera animation
         val lastLatLng by remember { derivedStateOf { TrackingManager.pathPoints.lastOrNull() } }
 
-        var showBackgroundLocationDialog by remember { mutableStateOf(false) }
         var showLowBatteryDialog by remember { mutableStateOf(false) }
-
-        // Check for background location permission on start (if needed)
-        val hasBackgroundLocationPermission =
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                        ContextCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                        ) == PackageManager.PERMISSION_GRANTED
-                } else {
-                        true
-                }
-
-        if (showBackgroundLocationDialog) {
-                androidx.compose.material3.AlertDialog(
-                        onDismissRequest = { showBackgroundLocationDialog = false },
-                        title = { Text("백그라운드 위치 권한 필요") },
-                        text = {
-                                Text(
-                                        "운동 경로를 정확하게 기록하려면 위치 권한을 '항상 허용'으로 설정해야 합니다. 설정 화면으로 이동하시겠습니까?"
-                                )
-                        },
-                        confirmButton = {
-                                androidx.compose.material3.TextButton(
-                                        onClick = {
-                                                showBackgroundLocationDialog = false
-                                                val intent =
-                                                        Intent(
-                                                                        android.provider.Settings
-                                                                                .ACTION_APPLICATION_DETAILS_SETTINGS
-                                                                )
-                                                                .apply {
-                                                                        data =
-                                                                                android.net.Uri
-                                                                                        .fromParts(
-                                                                                                "package",
-                                                                                                context.packageName,
-                                                                                                null
-                                                                                        )
-                                                                }
-                                                context.startActivity(intent)
-                                        }
-                                ) { Text("설정으로 이동") }
-                        },
-                        dismissButton = {
-                                androidx.compose.material3.TextButton(
-                                        onClick = { showBackgroundLocationDialog = false }
-                                ) { Text("취소") }
-                        }
-                )
-        }
-
-        LaunchedEffect(hasLocationPermission, hasBackgroundLocationPermission) {
-                if (hasLocationPermission && !hasBackgroundLocationPermission) {
-                        showBackgroundLocationDialog = true
-                }
-        }
 
         if (showLowBatteryDialog) {
                 androidx.compose.material3.AlertDialog(
