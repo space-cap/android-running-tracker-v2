@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
+import com.ezlevup.runningtrackerv2.BaseApplication
 import com.ezlevup.runningtrackerv2.R
 import com.ezlevup.runningtrackerv2.util.TrackingManager
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -17,6 +18,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RunningService : Service() {
 
@@ -37,6 +42,19 @@ class RunningService : Service() {
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
 
+    private val batteryReceiver =
+            object : android.content.BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    val level = intent.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1)
+                    val scale = intent.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1)
+                    val batteryPct = level * 100 / scale.toFloat()
+
+                    if (batteryPct < 20 && TrackingManager.isTracking) {
+                        forceSaveRun()
+                    }
+                }
+            }
+
     override fun onCreate() {
         super.onCreate()
         locationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -52,6 +70,13 @@ class RunningService : Service() {
                         }
                     }
                 }
+        val filter = android.content.IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        registerReceiver(batteryReceiver, filter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(batteryReceiver)
     }
 
     private fun start() {
@@ -175,6 +200,30 @@ class RunningService : Service() {
         locationClient.removeLocationUpdates(locationCallback)
         TrackingManager.stopTimer()
         stopSelf()
+    }
+
+    private fun forceSaveRun() {
+        if (!TrackingManager.isTracking) return
+
+        val runDao = (application as BaseApplication).database.getRunDao()
+        val runRecord = TrackingManager.createRunRecord(null)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            runDao.insertRun(runRecord)
+            withContext(Dispatchers.Main) {
+                stop()
+                val notificationManager =
+                        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val notification =
+                        NotificationCompat.Builder(this@RunningService, CHANNEL_ID)
+                                .setContentTitle("Running Tracker")
+                                .setContentText("Run saved due to low battery")
+                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                .setAutoCancel(true)
+                                .build()
+                notificationManager.notify(2, notification)
+            }
+        }
     }
 
     companion object {

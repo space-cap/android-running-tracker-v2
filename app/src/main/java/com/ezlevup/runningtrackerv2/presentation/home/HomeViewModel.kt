@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ezlevup.runningtrackerv2.data.RunDao
-import com.ezlevup.runningtrackerv2.data.RunRecord
 import com.ezlevup.runningtrackerv2.util.TrackingManager
 import kotlinx.coroutines.launch
 
@@ -37,18 +36,7 @@ class HomeViewModel(private val runDao: RunDao) : ViewModel() {
                         return
                 }
 
-                val avgSpeed = if (time > 0) (distance / 1000f) / (time / 1000f / 3600f) else 0f
-                val calories = (distance / 1000f * 60).toInt()
-
-                val run =
-                        RunRecord(
-                                img = bitmap,
-                                timestamp = timestamp,
-                                avgSpeedInKMH = avgSpeed,
-                                distanceInMeters = distance,
-                                timeInMillis = time,
-                                caloriesBurned = calories
-                        )
+                val run = TrackingManager.createRunRecord(bitmap)
 
                 viewModelScope.launch {
                         val runId = runDao.insertRun(run)

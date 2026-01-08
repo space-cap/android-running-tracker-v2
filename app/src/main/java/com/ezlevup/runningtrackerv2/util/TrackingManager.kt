@@ -106,4 +106,24 @@ object TrackingManager {
         startTime = 0L
         lastPaceCalculationTime = 0L
     }
+
+    fun createRunRecord(
+            bitmap: android.graphics.Bitmap?
+    ): com.ezlevup.runningtrackerv2.data.RunRecord {
+        val distance = distanceInMeters
+        val time = durationInMillis
+        val timestamp = System.currentTimeMillis()
+
+        val avgSpeed = if (time > 0) (distance / 1000f) / (time / 1000f / 3600f) else 0f
+        val calories = (distance / 1000f * 60).toInt()
+
+        return com.ezlevup.runningtrackerv2.data.RunRecord(
+                img = bitmap,
+                timestamp = timestamp,
+                avgSpeedInKMH = avgSpeed,
+                distanceInMeters = distance,
+                timeInMillis = time,
+                caloriesBurned = calories
+        )
+    }
 }
