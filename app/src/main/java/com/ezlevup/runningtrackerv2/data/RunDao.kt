@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RunDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertRun(run: RunRecord)
+    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertRun(run: RunRecord): Long
 
     @Query("SELECT * FROM run_table WHERE id = :runId") fun getRunById(runId: Int): Flow<RunRecord?>
 
@@ -14,6 +14,14 @@ interface RunDao {
 
     @Query("SELECT * FROM run_table ORDER BY timestamp DESC")
     fun getAllRunsSortedByDate(): Flow<List<RunRecord>>
+
+    @Query("SELECT SUM(distanceInMeters) FROM run_table") fun getTotalDistance(): Flow<Int?>
+
+    @Query("SELECT SUM(timeInMillis) FROM run_table") fun getTotalTimeInMillis(): Flow<Long?>
+
+    @Query("SELECT SUM(caloriesBurned) FROM run_table") fun getTotalCaloriesBurned(): Flow<Int?>
+
+    @Query("SELECT AVG(avgSpeedInKMH) FROM run_table") fun getTotalAvgSpeed(): Flow<Float?>
 
     @Query("SELECT * FROM run_table ORDER BY timeInMillis DESC")
     fun getAllRunsSortedByTimeInMillis(): Flow<List<RunRecord>>
@@ -27,11 +35,23 @@ interface RunDao {
     @Query("SELECT * FROM run_table ORDER BY distanceInMeters DESC")
     fun getAllRunsSortedByDistance(): Flow<List<RunRecord>>
 
-    @Query("SELECT SUM(timeInMillis) FROM run_table") fun getTotalTimeInMillis(): Flow<Long>
+    @Query(
+            "SELECT SUM(distanceInMeters) FROM run_table WHERE timestamp >= :start AND timestamp <= :end"
+    )
+    fun getTotalDistanceInRange(start: Long, end: Long): Flow<Int?>
 
-    @Query("SELECT SUM(caloriesBurned) FROM run_table") fun getTotalCaloriesBurned(): Flow<Int>
+    @Query(
+            "SELECT SUM(timeInMillis) FROM run_table WHERE timestamp >= :start AND timestamp <= :end"
+    )
+    fun getTotalTimeInRange(start: Long, end: Long): Flow<Long?>
 
-    @Query("SELECT SUM(distanceInMeters) FROM run_table") fun getTotalDistance(): Flow<Int>
+    @Query(
+            "SELECT SUM(caloriesBurned) FROM run_table WHERE timestamp >= :start AND timestamp <= :end"
+    )
+    fun getTotalCaloriesInRange(start: Long, end: Long): Flow<Int?>
 
-    @Query("SELECT AVG(avgSpeedInKMH) FROM run_table") fun getTotalAvgSpeed(): Flow<Float>
+    @Query(
+            "SELECT AVG(avgSpeedInKMH) FROM run_table WHERE timestamp >= :start AND timestamp <= :end"
+    )
+    fun getAvgSpeedInRange(start: Long, end: Long): Flow<Float?>
 }
