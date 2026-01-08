@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ezlevup.runningtrackerv2.service.RunningService
+import com.ezlevup.runningtrackerv2.util.BatteryUtils
 import com.ezlevup.runningtrackerv2.util.FormatUtils
 import com.ezlevup.runningtrackerv2.util.TrackingManager
 import com.google.android.gms.location.LocationServices
@@ -140,6 +141,7 @@ fun HomeScreen(
         val lastLatLng by remember { derivedStateOf { TrackingManager.pathPoints.lastOrNull() } }
 
         var showBackgroundLocationDialog by remember { mutableStateOf(false) }
+        var showLowBatteryDialog by remember { mutableStateOf(false) }
 
         // Check for background location permission on start (if needed)
         val hasBackgroundLocationPermission =
@@ -195,6 +197,31 @@ fun HomeScreen(
                 if (hasLocationPermission && !hasBackgroundLocationPermission) {
                         showBackgroundLocationDialog = true
                 }
+        }
+
+        if (showLowBatteryDialog) {
+                androidx.compose.material3.AlertDialog(
+                        onDismissRequest = { showLowBatteryDialog = false },
+                        title = { Text("배터리 부족 경고") },
+                        text = { Text("현재 배터리 잔량이 30% 이하입니다. 운동 중 전원이 꺼질 수 있습니다. 계속 하시겠습니까?") },
+                        confirmButton = {
+                                androidx.compose.material3.TextButton(
+                                        onClick = {
+                                                showLowBatteryDialog = false
+                                                Intent(context, RunningService::class.java).also {
+                                                        intent ->
+                                                        intent.action = RunningService.ACTION_START
+                                                        context.startService(intent)
+                                                }
+                                        }
+                                ) { Text("계속하기") }
+                        },
+                        dismissButton = {
+                                androidx.compose.material3.TextButton(
+                                        onClick = { showLowBatteryDialog = false }
+                                ) { Text("취소") }
+                        }
+                )
         }
 
         LaunchedEffect(lastLatLng) {
@@ -305,10 +332,19 @@ fun HomeScreen(
                                 // START Button
                                 Button(
                                         onClick = {
-                                                Intent(context, RunningService::class.java).also {
-                                                        intent ->
-                                                        intent.action = RunningService.ACTION_START
-                                                        context.startService(intent)
+                                                val batteryPct =
+                                                        BatteryUtils.getBatteryPercentage(context)
+                                                val isCharging = BatteryUtils.isCharging(context)
+                                                if (batteryPct <= 30 && !isCharging) {
+                                                        showLowBatteryDialog = true
+                                                } else {
+                                                        Intent(context, RunningService::class.java)
+                                                                .also { intent ->
+                                                                        intent.action =
+                                                                                RunningService
+                                                                                        .ACTION_START
+                                                                        context.startService(intent)
+                                                                }
                                                 }
                                         },
                                         colors =
