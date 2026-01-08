@@ -10,7 +10,7 @@
 ## 변경 제안
 
 ### 서비스 계층 (Service Layer)
-#### [MODIFY] [RunningService.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/service/RunningService.kt)
+#### [MODIFY] [RunningService.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/service/RunningService.kt)
 - **배터리 모니터링**:
     - `onCreate`에서 `Intent.ACTION_BATTERY_CHANGED`에 대한 `BroadcastReceiver`를 등록합니다.
     - 배터리 잔량을 지속적으로 모니터링합니다.
@@ -23,11 +23,11 @@
     - 서비스를 종료하고 "배터리 부족으로 인해 저장되었습니다"라는 알림을 표시합니다.
 
 ### 유틸리티 / 로직 (Utility / Logic)
-#### [MODIFY] [TrackingManager.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/util/TrackingManager.kt)
+#### [MODIFY] [TrackingManager.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/util/TrackingManager.kt)
 - **리팩토링**:
     - `createRunRecord(bitmap: Bitmap?): RunRecord` 헬퍼 함수를 추가하여 `RunRecord` 객체 생성 로직(칼로리 계산, 평균 속도 등)을 중앙화합니다. 이를 통해 `HomeViewModel`과 `RunningService` 간의 코드 중복을 방지합니다.
 
-#### [MODIFY] [HomeViewModel.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeViewModel.kt)
+#### [MODIFY] [HomeViewModel.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeViewModel.kt)
 - **리팩토링**:
     - `saveRun` 함수가 `TrackingManager.createRunRecord`를 사용하도록 업데이트합니다.
 

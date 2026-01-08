@@ -8,14 +8,14 @@
 ## 변경 제안
 
 ### 유틸리티
-#### [NEW] [BatteryUtils.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/util/BatteryUtils.kt)
+#### [NEW] [BatteryUtils.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/util/BatteryUtils.kt)
 - **목적**: 배터리 관련 로직을 분리하여 재사용성 및 가독성 향상.
 - **기능**:
     - `getBatteryPercentage(context: Context): Int`: 현재 배터리 잔량(%) 반환.
     - `isCharging(context: Context): Boolean`: 현재 충전 중인지 여부 반환.
 
 ### 프레젠테이션
-#### [MODIFY] [HomeScreen.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeScreen.kt)
+#### [MODIFY] [HomeScreen.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeScreen.kt)
 - **상태 추가**:
     - `showLowBatteryDialog` (Boolean): 배터리 부족 경고창 표시 여부 관리.
 - **로직 수정 (START RUN 버튼)**:

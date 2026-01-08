@@ -7,7 +7,7 @@
 ## 변경 제안
 
 ### 프레젠테이션 계층
-#### [MODIFY] [HomeScreen.kt](file:///c:/workdir/space-cap/AndroidStudioProjects/RunningTrackerV2/app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeScreen.kt)
+#### [MODIFY] [HomeScreen.kt](../app/src/main/java/com/ezlevup/runningtrackerv2/presentation/home/HomeScreen.kt)
 - **삭제**: `showBackgroundLocationDialog` 상태 변수 및 관련 로직.
 - **삭제**: `hasBackgroundLocationPermission` 확인 로직.
 - **삭제**: 다이얼로그를 트리거하는 `LaunchedEffect`.
